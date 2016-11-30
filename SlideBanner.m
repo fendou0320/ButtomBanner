@@ -24,33 +24,12 @@
         self.layer.borderWidth = 1.0;
         self.layer.borderColor = [[UIColor blackColor] CGColor];
         self.backgroundColor = [UIColor colorWithRed:.5 green:.5 blue:.5 alpha:.5];
-        [self creatRecognizer];
-        [self singleClick];
     }
     return self;
 }
 
-- (void)creatRecognizer{
-    
-    //实例化手势监听
-    UISwipeGestureRecognizer *longPress = [[UISwipeGestureRecognizer alloc] init];//WithTarget:self action:@selector(handleTableviewCellLongPressed:)];
-//    UILongPressGestureRecognizer *longPress =[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTableviewCellLongPressed:)];
-    //代理
-    longPress.delegate = self;
-    //将长按手势添加到需要实现长按操作的视图里
-    [self addGestureRecognizer:longPress];
-}
-
-
-//单击手势
-- (void)singleClick{
-    //单击手势
-    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-    [self addGestureRecognizer:singleTap];
-}
-
-//单击
-- (void)handleSingleTap:(UITapGestureRecognizer *)sender{
+//单击方法
+- (void)handleSingleTap{
     
     if ([self.sliderDetegate respondsToSelector:@selector(slideBanner:isSlide:)]) {
         [self.sliderDetegate slideBanner:self isSlide:YES];
@@ -82,8 +61,8 @@
     }else if (nowY > (self.superview.frame.size.height - self.frame.size.height)){
         nowY = self.superview.frame.size.height - self.frame.size.height;
     }
-    
-    [self setFrame:CGRectMake(nowX, nowY, self.frame.size.width, self.frame.size.height)];
+    NSLog(@"----%.2f",nowX);
+    self.frame = CGRectMake(nowX, nowY, self.frame.size.width, self.frame.size.height);
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event;
@@ -110,6 +89,13 @@
     
     CGFloat nowX = point.x - _point.x;
     CGFloat nowY = point.y - _point.y;
+    
+    //判断是否位置没变
+    if ((nowX == self.frame.origin.x)&&(nowY == self.frame.origin.y)) {
+        [self handleSingleTap];
+        return;
+    }
+    
     if (nowX < 0) {
         nowX = 0;
     }else if (nowX > (self.superview.frame.size.width - self.frame.size.width)){
@@ -123,7 +109,7 @@
     
     if (isLeft == YES) {
         
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             
             [self setFrame:CGRectMake(0, nowY, self.frame.size.width, self.frame.size.height)];
         } completion:^(BOOL finished) {
@@ -132,7 +118,7 @@
         
     }else{
         
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             
             [self setFrame:CGRectMake(viewWidth-selfWidth, nowY, self.frame.size.width, self.frame.size.height)];
             

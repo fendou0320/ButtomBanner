@@ -18,7 +18,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    SlideBanner *banner = [[SlideBanner alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    SlideBanner *banner = [[SlideBanner alloc] initWithFrame:CGRectMake(0, 100, 100, 100)];
     banner.sliderDetegate = self;
     [self.view addSubview:banner];
     
